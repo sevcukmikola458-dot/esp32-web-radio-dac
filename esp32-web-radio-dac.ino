@@ -23,12 +23,8 @@ void setup() {
     Serial.println(WiFi.localIP());
 
     // Використовуємо внутрішній DAC ESP32 (GPIO25 і GPIO26)
-    audio.setPinout(0, 0, 0);
-    audio.forceMono(true);
+    audio.setInternalDAC(true);    // вмикає вбудований DAC (потребує library v2.0.0)
     audio.setVolume(15);           // 0...21
-
-    audio.i2s_mclk_pin_select(0);
-    audio.setInternalDAC(true);    // вмикає вбудований DAC
 
     audio.connecttohost(radioURL);
 }
