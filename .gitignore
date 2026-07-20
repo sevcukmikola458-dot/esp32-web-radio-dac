@@ -1,0 +1,4 @@
+config.h
+*.bak
+.DS_Store
+build/
