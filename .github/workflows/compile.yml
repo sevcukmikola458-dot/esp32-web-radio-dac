@@ -40,6 +40,12 @@ jobs:
         run: |
           arduino-cli lib install "ESP32-audioI2S-master@2.0.0"
 
-      - name: Compile sketch
+      - name: Compile sketch and export binary
         run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 .
+          arduino-cli compile --fqbn esp32:esp32:esp32 --export-binaries .
+
+      - name: Upload firmware as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32-web-radio-dac-firmware
+          path: build/esp32.esp32.esp32/*.bin
