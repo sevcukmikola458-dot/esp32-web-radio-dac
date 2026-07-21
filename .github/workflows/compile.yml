@@ -40,12 +40,30 @@ jobs:
         run: |
           arduino-cli lib install "ESP32-audioI2S-master@2.0.0"
 
-      - name: Compile sketch and export binary
+      - name: Compile sketch and export binaries
         run: |
           arduino-cli compile --fqbn esp32:esp32:esp32 --export-binaries .
+          ls -la build/esp32.esp32.esp32/
 
-      - name: Upload firmware as artifact
+      - name: Install esptool
+        run: |
+          pip install esptool
+
+      - name: Merge into single flashable binary
+        run: |
+          cd build/esp32.esp32.esp32
+          BOOTLOADER=$(ls *.bootloader.bin)
+          PARTITIONS=$(ls *.partitions.bin)
+          APP=$(ls *.ino.bin)
+          echo "bootloader=$BOOTLOADER partitions=$PARTITIONS app=$APP"
+          esptool.py --chip esp32 merge_bin -o merged-firmware.bin \
+            --flash_mode dio --flash_freq 40m --flash_size 4MB \
+            0x1000 "$BOOTLOADER" \
+            0x8000 "$PARTITIONS" \
+            0x10000 "$APP"
+
+      - name: Upload merged firmware as artifact
         uses: actions/upload-artifact@v4
         with:
           name: esp32-web-radio-dac-firmware
-          path: build/esp32.esp32.esp32/*.bin
+          path: build/esp32.esp32.esp32/merged-firmware.bin
