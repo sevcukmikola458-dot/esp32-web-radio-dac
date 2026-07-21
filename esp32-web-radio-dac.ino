@@ -6,7 +6,7 @@
 // ==== URL потоку інтернет-радіо ====
 const char* radioURL = "http://ice1.somafm.com/groovesalad-128-mp3";
 
-Audio audio;
+Audio audio(true, I2S_DAC_CHANNEL_BOTH_EN);   // true = internal DAC, both channels
 
 void setup() {
     Serial.begin(115200);
@@ -23,7 +23,6 @@ void setup() {
     Serial.println(WiFi.localIP());
 
     // Використовуємо внутрішній DAC ESP32 (GPIO25 і GPIO26)
-    audio.setInternalDAC(true);    // вмикає вбудований DAC (потребує library v2.0.0)
     audio.setVolume(15);           // 0...21
 
     audio.connecttohost(radioURL);
