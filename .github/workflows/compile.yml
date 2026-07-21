@@ -14,13 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create dummy config.h (for CI build only)
+      - name: Create config.h from secrets
         run: |
-          cat > config.h << 'EOF'
+          cat > config.h << EOF
           #ifndef CONFIG_H
           #define CONFIG_H
-          #define WIFI_SSID     "dummy"
-          #define WIFI_PASSWORD "dummy"
+          #define WIFI_SSID     "${{ secrets.WIFI_SSID }}"
+          #define WIFI_PASSWORD "${{ secrets.WIFI_PASSWORD }}"
           #endif
           EOF
 
